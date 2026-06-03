@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Y2K Digital Todo List</title>
+    
+    <!-- استدعاء خطوط الـ Retro والـ Pixel من Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- كود الـ CSS المدمج (Y2K Aesthetic) -->
+    <style>
+        :root {
+            --bg-main: #FFF0F5;         /* Lavender Blush - الوردي الفاتح جداً للخلفية */
+            --y2k-pink: #FF66B2;        /* Hot Bubblegum Pink */
+            --y2k-purple: #B19FFB;      /* Cyber Purple */
+            --window-top: #FF99CC;      /* لون شريط النافذة العلوي */
+            --text-dark: #1A1A1A;       /* أسود مطفي للنصوص */
+            --window-bg: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Fredoka', sans-serif; /* خط كيرفي ولطيف للمحتوى */
+        }
+
+        body {
+            background-color: #1a1a2e; /* خلفية الفيجوال ستوديو الخارجية */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* حاوية الأيفون 13 برو ماكس */
+        .phone-container {
+            width: 100%;
+            max-width: 428px; 
+            height: 100vh;
+            max-height: 926px; 
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            border: 4px solid var(--text-dark); /* إطار حاد كلاسيكي */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        /* شاشات التنقل */
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .screen.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* --- 1. شاشة الترحيب الـ Retro --- */
+        #welcome-screen {
+            background: linear-gradient(135deg, #FFC0CB 0%, #E6E6FA 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .welcome-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .retro-subtitle {
+            font-family: 'VT323', monospace; /* خط بكسل كمبيوتر قديم */
+            font-size: 2rem;
+            color: var(--y2k-pink);
+            text-shadow: 2px 2px 0px #FFF;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .retro-title {
+            font-size: 2.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            background: linear-gradient(to right, var(--y2k-pink), var(--y2k-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+        }
+
+        /* صندوق التاريخ على ستايل النوافذ الكلاسيكية */
+        .retro-window-box {
+            background: var(--window-bg);
+            border: 3px solid var(--text-dark);
+            box-shadow: 4px 4px 0px var(--text-dark);
+            width: 85%;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+
+        .window-top-bar {
+            background-color: var(--y2k-purple);
+            border-bottom: 3px solid var(--text-dark);
+            padding: 6px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-title-text {
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .window-controls span {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: #FFF;
+            border: 2px solid var(--text-dark);
+            margin-left: 3px;
+            font-size: 8px;
+            line-height: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .window-body {
+            padding: 25px 20px;
+        }
+
+        .day-text {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--y2k-pink);
+            margin-bottom: 5px;
+        }
+
+        .date-text {
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            color: #555;
+        }
+
+        .btn-y2k {
+            background-color: var(--y2k-pink);
+            color: white;
+            border: 3px solid var(--text-dark);
+            padding: 12px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 40px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--text-dark);
+            transition: all 0.1s;
+        }
+
+        .btn-y2k:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--text-dark);
+        }
+
+        /* --- 2. الشاشة الرئيسية والجدول --- */
+        /* شريط الـ Marquee المتحرك للتحفيز */
+        .marquee-container {
+            background-color: var(--text-dark);
+            color: #FFF;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 6px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            border-bottom: 2px solid var(--text-dark);
+        }
+
+        .marquee-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 22s linear infinite; /* تنعيم الحركة لتسهيل القراءة */
+            color: #FFF;
+        }
+
+        .marquee-content span {
+            color: var(--y2k-pink);
+            font-weight: bold;
+            margin: 0 10px;
+        }
+
+        @keyframes marquee {
+            0%   { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        .header-main {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .header-main h2 {
+            font-size: 2rem;
+            color: var(--y2k-pink);
+            text-shadow: 2px 2px 0 #FFF;
+        }
+
+        .header-main p {
+            font-family: 'VT323', monospace;
+            font-size: 1.3rem;
+            color: #666;
+        }
+
+        /* كرت الإنجاز الـ Retro */
+        .dashboard-window {
+            background: white;
+            border: 3px solid var(--text-dark);
+            margin: 15px;
+            box-shadow: 4px 4px 0px var(--y2k-purple);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+        }
+
+        .progress-info h3 {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        #progress-percentage {
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            color: var(--y2k-pink);
+            font-weight: bold;
+        }
+
+        .progress-bar-container {
+            height: 12px;
+            background-color: #EEE;
+            border-top: 3px solid var(--text-dark);
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background-color: var(--y2k-pink);
+            transition: width 0.3s ease;
+        }
+
+        /* حاوية القوائم والمهام */
+        .todo-content-area {
+            padding: 5px 15px 100px 15px;
+        }
+
+        /* تصميم الأقسام كأنها نوافذ نظام تشغيل كلاسيكي */
+        .y2k-section-window {
+            background: white;
+            border: 3px solid var(--text-dark);
+            margin-bottom: 20px;
+            box-shadow: 4px 4px 0px var(--text-dark);
+        }
+
+        .section-bar {
+            background-color: var(--window-top);
+            border-bottom: 3px solid var(--text-dark);
+            padding: 6px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-body {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* كروت تشيك لست المهام */
+        .task-item {
+            display: flex;
+            align-items: center;
+            background-color: #FFF;
+            padding: 12px;
+            border: 2px solid #EEE;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .task-item.checked {
+            background-color: #F9F9F9;
+            border-color: transparent;
+        }
+
+        .task-item.checked .task-text {
+            text-decoration: line-through;
+            color: #A0A0A0;
+        }
+
+        /* ستايل مربع الـ Checkbox الـ Retro */
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--y2k-purple);
+            border-radius: 4px; 
+            margin-right: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            background: white;
+        }
+
+        .task-item.checked .custom-checkbox {
+            background-color: var(--y2k-pink);
+            border-color: var(--text-dark);
+        }
+
+        .task-item.checked .custom-checkbox::after {
+            content: "✓";
+            color: #FFF;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .task-text {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+
+        /* زر فتح الأذكار */
+        .azkar-trigger-btn {
+            width: 100%;
+            background-color: #FFF;
+            color: var(--y2k-purple);
+            border: 2px dashed var(--y2k-purple);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .azkar-trigger-btn:active {
+            background-color: #FAF6FF;
+        }
+
+        /* زر الـ Floating السفلية للإبهام */
+        .fab-btn {
+            position: fixed;
+            bottom: 30px;
+            right: calc(50% - 180px); 
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--y2k-pink);
+            color: white;
+            font-size: 2rem;
+            border: 3px solid var(--text-dark);
+            box-shadow: 4px 4px 0px var(--text-dark);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99;
+        }
+
+        @media(max-width: 430px) {
+            .fab-btn { right: 25px; } 
+        }
+
+        /* --- 3. تصميم النوافذ المنبثقة (Modals) --- */
+        .modal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: flex-end; 
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--bg-main);
+            width: 100%;
+            border-top: 4px solid var(--text-dark);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
+            animation: slideUp 0.25s ease-out;
+            max-height: 85%;
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-popup-bar {
+            background-color: var(--y2k-purple);
+            border: 3px solid var(--text-dark);
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .modal-popup-bar h2 {
+            font-size: 1rem;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .close-modal {
+            background: white;
+            border: 2px solid var(--text-dark);
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            cursor: pointer;
+        }
+
+        /* كروت العدادات */
+        .azkar-counters-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .counter-card {
+            background-color: #FFF;
+            border: 2px solid var(--text-dark);
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+        }
+
+        .counter-card:active {
+            background-color: #FFF0F5;
+            transform: translate(1px, 1px);
+        }
+
+        .counter-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .counter-number {
+            font-family: 'VT323', monospace;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--y2k-pink);
+        }
+
+        .counter-target {
+            font-family: 'VT323', monospace;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .btn-reset-azkar {
+            margin-top: 15px;
+            width: 100%;
+            background: white;
+            border: 2px solid var(--text-dark);
+            color: var(--text-dark);
+            font-weight: 500;
+            padding: 10px;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px var(--text-dark);
+        }
+
+        /* ستايل نافذة إضافة مهمة */
+        .text-popup h3 {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .text-popup input {
+            width: 100%;
+            padding: 12px;
+            border: 3px solid var(--text-dark);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 12px;
+            font-weight: 600;
+            border: 2px solid var(--text-dark);
+            cursor: pointer;
+            box-shadow: 2px 2px 0px var(--text-dark);
+        }
+
+        .btn-save { background-color: var(--y2k-pink); color: #FFF; }
+        .btn-cancel { background-color: #EEE; color: var(--text-dark); }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        
+        <!-- 1. Welcome Screen (Retro Style) -->
+        <section id="welcome-screen" class="screen active">
+            <div class="welcome-content">
+                <h2 class="retro-subtitle">Made 4 The Internet</h2>
+                <h1 class="retro-title">Welcome babe!</h1>
+                
+                <div class="retro-window-box">
+                    <div class="window-top-bar">
+                        <span class="window-title-text">today.exe</span>
+                        <div class="window-controls"><span>_</span><span>🗖</span><span>✕</span></div>
+                    </div>
+                    <div class="window-body">
+                        <p id="welcome-day" class="day-text">Loading...</p>
+                        <p id="welcome-date" class="date-text">00/00/0000</p>
+                    </div>
+                </div>
+
+                <button id="start-btn" class="btn-y2k">Open Schedule ➔</button>
+            </div>
+        </section>
+
+        <!-- 2. Main Routine Screen -->
+        <section id="main-dashboard" class="screen">
+            <header class="app-header">
+                <!-- شريط الـ Marquee المحدث بالتحفيز الانجليزي القوي -->
+                <div class="marquee-container">
+                    <div class="marquee-content">
+                        ✨ <span>Believe you can and you're halfway there!</span> ★ 
+                        💖 <span>Your potential is endless, keep glowing.</span> ★ 
+                        ⚡ <span>Small steps everyday lead to big results!</span> ★ 
+                        🌸 <span>Focus on your goals, you've got this babe!</span> ★
+                    </div>
+                </div>
+                <div class="header-main">
+                    <h2 id="current-day-title">Today's List</h2>
+                    <p id="current-date-subtitle">Date</p>
+                </div>
+            </header>
+
+            <!-- Dashboard Progress Window -->
+            <div class="dashboard-window">
+                <div class="progress-info">
+                    <h3>Daily Progress</h3>
+                    <span id="progress-percentage">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="progress-bar" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <!-- Main Lists Content Area -->
+            <div class="todo-content-area">
+                
+                <!-- Prayers Windows -->
+                <div class="y2k-section-window">
+                    <div class="section-bar">
+                        <span class="section-title">✨ Daily Prayers</span>
+                        <div class="window-controls"><span>✕</span></div>
+                    </div>
+                    <div class="section-body" id="prayers-list"></div>
+                </div>
+
+                <!-- Azkar Windows -->
+                <div class="y2k-section-window">
+                    <div class="section-bar">
+                        <span class="section-title">📿 Personal Azkar</span>
+                        <div class="window-controls"><span>✕</span></div>
+                    </div>
+                    <div class="section-body">
+                        <button class="azkar-trigger-btn" onclick="toggleAzkarModal()">Open My Counter Box</button>
+                    </div>
+                </div>
+
+                <!-- Skincare Windows -->
+                <div class="y2k-section-window">
+                    <div class="section-bar">
+                        <span class="section-title">🧴 Skincare Routine</span>
+                        <div class="window-controls"><span>✕</span></div>
+                    </div>
+                    <div class="section-body" id="skincare-list"></div>
+                </div>
+
+                <!-- Hair & Shower Windows -->
+                <div id="hair-shower-section" class="y2k-section-window hidden">
+                    <div class="section-bar">
+                        <span class="section-title">🚿 Shower & Hair Care</span>
+                        <div class="window-controls"><span>✕</span></div>
+                    </div>
+                    <div class="section-body" id="hair-shower-list"></div>
+                </div>
+
+                <!-- Custom Tasks Windows -->
+                <div class="y2k-section-window">
+                    <div class="section-bar">
+                        <span class="section-title">📌 Extra Tasks</span>
+                        <div class="window-controls"><span>✕</span></div>
+                    </div>
+                    <div class="section-body" id="custom-tasks-list"></div>
+                </div>
+
+            </div>
+
+            <!-- Floating Action Button for Thumb Reach -->
+            <button class="fab-btn" onclick="openAddTaskModal()">+</button>
+        </section>
+
+    </div>
+
+    <!-- Azkar Popup Modal Box -->
+    <div id="azkar-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-popup-bar">
+                <h2>Azkar Counters</h2>
+                <button class="close-modal" onclick="toggleAzkarModal()">✕</button>
+            </div>
+            <div class="azkar-counters-container">
+                <div class="counter-card" onclick="incrementCounter('istighfar', 10000)">
+                    <span class="counter-name">Istighfar</span>
+                    <div>
+                        <span class="counter-number" id="count-istighfar">0</span>
+                        <span class="counter-target">/10k</span>
+                    </div>
+                </div>
+                <div class="counter-card" onclick="incrementCounter('tasbeeh', 10000)">
+                    <span class="counter-name">Tasbeeh</span>
+                    <div>
+                        <span class="counter-number" id="count-tasbeeh">0</span>
+                        <span class="counter-target">/10k</span>
+                    </div>
+                </div>
+                <div class="counter-card" onclick="incrementCounter('hawqala', 100)">
+                    <span class="counter-name">Hawqala</span>
+                    <div>
+                        <span class="counter-number" id="count-hawqala">0</span>
+                        <span class="counter-target">/100</span>
+                    </div>
+                </div>
+                <div class="counter-card" onclick="incrementCounter('ibrahimya', 100)">
+                    <span class="counter-name">Salat Ibrahimya</span>
+                    <div>
+                        <span class="counter-number" id="count-ibrahimya">0</span>
+                        <span class="counter-target">/100</span>
+                    </div>
+                </div>
+                <div class="counter-card" onclick="incrementCounter('taj', 100)">
+                    <span class="counter-name">Taj Al-Dhikr</span>
+                    <div>
+                        <span class="counter-number" id="count-taj">0</span>
+                        <span class="counter-target">/100</span>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-reset-azkar" onclick="resetAzkarCounters()">Reset All Counters</button>
+        </div>
+    </div>
+
+    <!-- Add Custom Task Modal Box -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content text-popup">
+            <div class="modal-popup-bar">
+                <h2>New Mission</h2>
+                <button class="close-modal" onclick="closeAddTaskModal()">✕</button>
+            </div>
+            <h3>Add a custom task for today:</h3>
+            <input type="text" id="new-task-input" placeholder="Type your task here..." autofocus>
+            <div class="modal-actions">
+                <button class="btn-save" onclick="saveCustomTask()">Add Task</button>
+                <button class="btn-cancel" onclick="closeAddTaskModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
