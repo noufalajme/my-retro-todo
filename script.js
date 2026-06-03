@@ -73,14 +73,14 @@ function buildDynamicRoutine() {
         });
     }
 
-    // D. Load saved custom missions for today from LocalStorage
+    // D. Load ONLY saved custom tasks
     const savedCustoms = JSON.parse(localStorage.getItem(`y2k-custom-tasks-${currentDayIndex}`)) || [];
     todoList = todoList.concat(savedCustoms);
 
     renderAllLists();
 }
 
-// 3. Render the pixel-styled list items on screen
+// 3. Render the pixel-styled list items on screen with DELETE feature for custom tasks
 function renderAllLists() {
     const prayersArea = document.getElementById("prayers-list");
     const skincareArea = document.getElementById("skincare-list");
@@ -93,12 +93,28 @@ function renderAllLists() {
     customArea.innerHTML = "";
 
     todoList.forEach(item => {
-        const itemHTML = `
-            <div class="task-item ${item.checked ? 'checked' : ''}" onclick="toggleTaskCheck('${item.id}')">
-                <div class="custom-checkbox"></div>
-                <span class="task-text">${item.text}</span>
-            </div>
-        `;
+        let itemHTML = "";
+
+        // لو كانت المهمة كاستم (إضافية)، نحط زر حذف إكس أحمر أنيق على اليمين لمنع التداخل مع التشيك بوكس
+        if (item.id.startsWith("custom-")) {
+            itemHTML = `
+                <div class="task-item ${item.checked ? 'checked' : ''}" style="justify-content: space-between;">
+                    <div style="display: flex; align-items: center; width: 85%;" onclick="toggleTaskCheck('${item.id}')">
+                        <div class="custom-checkbox"></div>
+                        <span class="task-text">${item.text}</span>
+                    </div>
+                    <span class="delete-task-btn" onclick="deleteCustomTask('${item.id}')" style="color: #FF3366; font-weight: bold; cursor: pointer; padding: 0 5px; font-size: 1.1rem; user-select: none;">✕</span>
+                </div>
+            `;
+        } else {
+            // المهام الأساسية بدون زر حذف
+            itemHTML = `
+                <div class="task-item ${item.checked ? 'checked' : ''}" onclick="toggleTaskCheck('${item.id}')">
+                    <div class="custom-checkbox"></div>
+                    <span class="task-text">${item.text}</span>
+                </div>
+            `;
+        }
 
         if (item.id.startsWith("prayer-")) {
             prayersArea.insertAdjacentHTML("beforeend", itemHTML);
@@ -128,6 +144,19 @@ function toggleTaskCheck(id) {
         
         renderAllLists();
     }
+}
+
+// خاصية الحذف الجديدة للمهام الإضافية وتحديث الذاكرة
+function deleteCustomTask(id) {
+    // حذف المهمة من المصفوفة الأساسية
+    todoList = todoList.filter(item => item.id !== id);
+    
+    // تحديث الـ LocalStorage بالمهام المتبقية فقط
+    const customs = todoList.filter(t => t.id.startsWith("custom-"));
+    localStorage.setItem(`y2k-custom-tasks-${currentDayIndex}`, JSON.stringify(customs));
+    
+    // إعادة رندرة القائمة فوراً لشاشة نظيفة
+    renderAllLists();
 }
 
 function calculateProgress() {
@@ -173,6 +202,7 @@ function incrementCounter(key, target) {
     }
 }
 
+// Load counters dynamically from storage
 function loadAzkarCounters() {
     const keys = ["istighfar", "tasbeeh", "hawqala", "ibrahimya", "taj"];
     keys.forEach(key => {
@@ -191,15 +221,17 @@ function resetAzkarCounters() {
     }
 }
 
-// OS Retro Smooth Slide Transition
+// OS Retro Smooth Slide Transition (No Overlap)
 function switchScreen(fromId, toId) {
     const fromScreen = document.getElementById(fromId);
     const toScreen = document.getElementById(toId);
     
-    fromScreen.style.opacity = "0";
-    setTimeout(() => {
-        fromScreen.classList.remove("active");
-        toScreen.classList.add("active");
-        setTimeout(() => { toScreen.style.opacity = "1"; }, 50);
-    }, 300);
+    fromScreen.style.display = "none";
+    fromScreen.classList.remove("active");
+    
+    toScreen.style.display = "block";
+    toScreen.classList.add("active");
+    
+    document.querySelector(".phone-container").scrollTop = 0;
+    toScreen.scrollTop = 0;
 }
