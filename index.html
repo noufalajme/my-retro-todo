@@ -5,19 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Y2K Digital Todo List</title>
     
-    <!-- استدعاء خطوط الـ Retro والـ Pixel من Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <!-- كود الـ CSS المدمج (Y2K Aesthetic) -->
     <style>
         :root {
-            --bg-main: #FFF0F5;         /* Lavender Blush - الوردي الفاتح جداً للخلفية */
-            --y2k-pink: #FF66B2;        /* Hot Bubblegum Pink */
-            --y2k-purple: #B19FFB;      /* Cyber Purple */
-            --window-top: #FF99CC;      /* لون شريط النافذة العلوي */
-            --text-dark: #1A1A1A;       /* أسود مطفي للنصوص */
+            --bg-main: #FFF0F5;         
+            --y2k-pink: #FF66B2;        
+            --y2k-purple: #B19FFB;      
+            --window-top: #FF99CC;      
+            --text-dark: #1A1A1A;       
             --window-bg: #FFFFFF;
         }
 
@@ -26,18 +24,17 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
-            font-family: 'Fredoka', sans-serif; /* خط كيرفي ولطيف للمحتوى */
+            font-family: 'Fredoka', sans-serif;
         }
 
         body {
-            background-color: #1a1a2e; /* خلفية الفيجوال ستوديو الخارجية */
+            background-color: #1a1a2e; 
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
 
-        /* حاوية الأيفون 13 برو ماكس */
         .phone-container {
             width: 100%;
             max-width: 428px; 
@@ -46,30 +43,31 @@
             background-color: var(--bg-main);
             color: var(--text-dark);
             position: relative;
-            overflow-y: auto;
             overflow-x: hidden;
-            border: 4px solid var(--text-dark); /* إطار حاد كلاسيكي */
+            border: 4px solid var(--text-dark); 
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
-        /* شاشات التنقل */
+        /* إصلاح مشكلة الصفحة الفاضية: الشاشات غير النشطة تختفي تماماً من الهيكل */
         .screen {
             display: none;
             width: 100%;
             height: 100%;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            overflow-y: auto; /* يجعل التمرير داخل الشاشة نفسها */
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .screen.active {
             display: block;
-            opacity: 1;
         }
 
-        /* --- 1. شاشة الترحيب الـ Retro --- */
+        /* --- 1. Welcome Screen --- */
         #welcome-screen {
             background: linear-gradient(135deg, #FFC0CB 0%, #E6E6FA 100%);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
@@ -84,7 +82,7 @@
         }
 
         .retro-subtitle {
-            font-family: 'VT323', monospace; /* خط بكسل كمبيوتر قديم */
+            font-family: 'VT323', monospace; 
             font-size: 2rem;
             color: var(--y2k-pink);
             text-shadow: 2px 2px 0px #FFF;
@@ -102,7 +100,6 @@
             margin-bottom: 40px;
         }
 
-        /* صندوق التاريخ على ستايل النوافذ الكلاسيكية */
         .retro-window-box {
             background: var(--window-bg);
             border: 3px solid var(--text-dark);
@@ -175,12 +172,10 @@
             box-shadow: 2px 2px 0px var(--text-dark);
         }
 
-        /* --- 2. الشاشة الرئيسية والجدول --- */
-        /* شريط الـ Marquee المتحرك للتحفيز */
+        /* --- 2. Main Dashboard --- */
         .marquee-container {
             background-color: var(--text-dark);
             color: #FFF;
-            font-family: 'Fredoka', sans-serif;
             font-size: 0.9rem;
             font-weight: 500;
             padding: 6px 0;
@@ -192,8 +187,7 @@
         .marquee-content {
             display: inline-block;
             padding-left: 100%;
-            animation: marquee 22s linear infinite; /* تنعيم الحركة لتسهيل القراءة */
-            color: #FFF;
+            animation: marquee 22s linear infinite; 
         }
 
         .marquee-content span {
@@ -224,7 +218,6 @@
             color: #666;
         }
 
-        /* كرت الإنجاز الـ Retro */
         .dashboard-window {
             background: white;
             border: 3px solid var(--text-dark);
@@ -239,10 +232,7 @@
             padding: 12px 15px;
         }
 
-        .progress-info h3 {
-            font-size: 1rem;
-            font-weight: 500;
-        }
+        .progress-info h3 { font-size: 1rem; font-weight: 500; }
 
         #progress-percentage {
             font-family: 'VT323', monospace;
@@ -265,12 +255,10 @@
             transition: width 0.3s ease;
         }
 
-        /* حاوية القوائم والمهام */
         .todo-content-area {
             padding: 5px 15px 100px 15px;
         }
 
-        /* تصميم الأقسام كأنها نوافذ نظام تشغيل كلاسيكي */
         .y2k-section-window {
             background: white;
             border: 3px solid var(--text-dark);
@@ -292,7 +280,6 @@
             font-weight: 600;
             color: var(--text-dark);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .section-body {
@@ -302,7 +289,6 @@
             gap: 8px;
         }
 
-        /* كروت تشيك لست المهام */
         .task-item {
             display: flex;
             align-items: center;
@@ -311,7 +297,6 @@
             border: 2px solid #EEE;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.1s ease;
         }
 
         .task-item.checked {
@@ -324,7 +309,6 @@
             color: #A0A0A0;
         }
 
-        /* ستايل مربع الـ Checkbox الـ Retro */
         .custom-checkbox {
             width: 20px;
             height: 20px;
@@ -350,12 +334,8 @@
             font-weight: bold;
         }
 
-        .task-text {
-            font-size: 0.95rem;
-            color: var(--text-dark);
-        }
+        .task-text { font-size: 0.95rem; color: var(--text-dark); }
 
-        /* زر فتح الأذكار */
         .azkar-trigger-btn {
             width: 100%;
             background-color: #FFF;
@@ -368,11 +348,6 @@
             cursor: pointer;
         }
 
-        .azkar-trigger-btn:active {
-            background-color: #FAF6FF;
-        }
-
-        /* زر الـ Floating السفلية للإبهام */
         .fab-btn {
             position: fixed;
             bottom: 30px;
@@ -392,14 +367,12 @@
             z-index: 99;
         }
 
-        @media(max-width: 430px) {
-            .fab-btn { right: 25px; } 
-        }
+        @media(max-width: 430px) { .fab-btn { right: 25px; } }
 
-        /* --- 3. تصميم النوافذ المنبثقة (Modals) --- */
+        /* --- 3. Modals --- */
         .modal {
             display: none;
-            position: absolute;
+            position: fixed; /* تغيير لتثبيت النوافذ فوق الواجهة تماماً */
             top: 0;
             left: 0;
             width: 100%;
@@ -410,26 +383,19 @@
             align-items: flex-end; 
         }
 
-        .modal.open {
-            display: flex;
-        }
+        .modal.open { display: flex; }
 
         .modal-content {
             background-color: var(--bg-main);
             width: 100%;
+            max-width: 428px;
             border-top: 4px solid var(--text-dark);
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
             padding: 20px;
             box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
-            animation: slideUp 0.25s ease-out;
             max-height: 85%;
             overflow-y: auto;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
         }
 
         .modal-popup-bar {
@@ -442,28 +408,10 @@
             margin-bottom: 15px;
         }
 
-        .modal-popup-bar h2 {
-            font-size: 1rem;
-            color: white;
-            text-transform: uppercase;
-        }
+        .modal-popup-bar h2 { font-size: 1rem; color: white; text-transform: uppercase; }
+        .close-modal { background: white; border: 2px solid var(--text-dark); font-size: 0.8rem; font-weight: bold; padding: 2px 6px; cursor: pointer; }
 
-        .close-modal {
-            background: white;
-            border: 2px solid var(--text-dark);
-            font-size: 0.8rem;
-            font-weight: bold;
-            padding: 2px 6px;
-            cursor: pointer;
-        }
-
-        /* كروت العدادات */
-        .azkar-counters-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
+        .azkar-counters-container { display: flex; flex-direction: column; gap: 10px; }
         .counter-card {
             background-color: #FFF;
             border: 2px solid var(--text-dark);
@@ -473,74 +421,17 @@
             align-items: center;
             position: relative;
             cursor: pointer;
-            user-select: none;
             box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
         }
 
-        .counter-card:active {
-            background-color: #FFF0F5;
-            transform: translate(1px, 1px);
-        }
+        .counter-number { font-family: 'VT323', monospace; font-size: 1.6rem; font-weight: bold; color: var(--y2k-pink); }
+        .counter-target { font-family: 'VT323', monospace; font-size: 0.9rem; color: #888; }
+        .btn-reset-azkar { margin-top: 15px; width: 100%; background: white; border: 2px solid var(--text-dark); padding: 10px; cursor: pointer; box-shadow: 2px 2px 0px var(--text-dark); }
 
-        .counter-name {
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-
-        .counter-number {
-            font-family: 'VT323', monospace;
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: var(--y2k-pink);
-        }
-
-        .counter-target {
-            font-family: 'VT323', monospace;
-            font-size: 0.9rem;
-            color: #888;
-        }
-
-        .btn-reset-azkar {
-            margin-top: 15px;
-            width: 100%;
-            background: white;
-            border: 2px solid var(--text-dark);
-            color: var(--text-dark);
-            font-weight: 500;
-            padding: 10px;
-            cursor: pointer;
-            box-shadow: 2px 2px 0px var(--text-dark);
-        }
-
-        /* ستايل نافذة إضافة مهمة */
-        .text-popup h3 {
-            margin-bottom: 12px;
-            font-size: 1.1rem;
-        }
-
-        .text-popup input {
-            width: 100%;
-            padding: 12px;
-            border: 3px solid var(--text-dark);
-            font-size: 1rem;
-            margin-bottom: 15px;
-            outline: none;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal-actions button {
-            flex: 1;
-            padding: 12px;
-            font-weight: 600;
-            border: 2px solid var(--text-dark);
-            cursor: pointer;
-            box-shadow: 2px 2px 0px var(--text-dark);
-        }
-
+        .text-popup h3 { margin-bottom: 12px; font-size: 1.1rem; }
+        .text-popup input { width: 100%; padding: 12px; border: 3px solid var(--text-dark); font-size: 1rem; margin-bottom: 15px; outline: none; }
+        .modal-actions { display: flex; gap: 10px; }
+        .modal-actions button { flex: 1; padding: 12px; font-weight: 600; border: 2px solid var(--text-dark); cursor: pointer; box-shadow: 2px 2px 0px var(--text-dark); }
         .btn-save { background-color: var(--y2k-pink); color: #FFF; }
         .btn-cancel { background-color: #EEE; color: var(--text-dark); }
         .hidden { display: none !important; }
@@ -550,7 +441,6 @@
 
     <div class="phone-container">
         
-        <!-- 1. Welcome Screen (Retro Style) -->
         <section id="welcome-screen" class="screen active">
             <div class="welcome-content">
                 <h2 class="retro-subtitle">Made 4 The Internet</h2>
@@ -571,10 +461,8 @@
             </div>
         </section>
 
-        <!-- 2. Main Routine Screen -->
         <section id="main-dashboard" class="screen">
             <header class="app-header">
-                <!-- شريط الـ Marquee المحدث بالتحفيز الانجليزي القوي -->
                 <div class="marquee-container">
                     <div class="marquee-content">
                         ✨ <span>Believe you can and you're halfway there!</span> ★ 
@@ -589,7 +477,6 @@
                 </div>
             </header>
 
-            <!-- Dashboard Progress Window -->
             <div class="dashboard-window">
                 <div class="progress-info">
                     <h3>Daily Progress</h3>
@@ -600,65 +487,50 @@
                 </div>
             </div>
 
-            <!-- Main Lists Content Area -->
             <div class="todo-content-area">
-                
-                <!-- Prayers Windows -->
                 <div class="y2k-section-window">
                     <div class="section-bar">
                         <span class="section-title">✨ Daily Prayers</span>
-                        <div class="window-controls"><span>✕</span></div>
                     </div>
                     <div class="section-body" id="prayers-list"></div>
                 </div>
 
-                <!-- Azkar Windows -->
                 <div class="y2k-section-window">
                     <div class="section-bar">
                         <span class="section-title">📿 Personal Azkar</span>
-                        <div class="window-controls"><span>✕</span></div>
                     </div>
                     <div class="section-body">
                         <button class="azkar-trigger-btn" onclick="toggleAzkarModal()">Open My Counter Box</button>
                     </div>
                 </div>
 
-                <!-- Skincare Windows -->
                 <div class="y2k-section-window">
                     <div class="section-bar">
                         <span class="section-title">🧴 Skincare Routine</span>
-                        <div class="window-controls"><span>✕</span></div>
                     </div>
                     <div class="section-body" id="skincare-list"></div>
                 </div>
 
-                <!-- Hair & Shower Windows -->
                 <div id="hair-shower-section" class="y2k-section-window hidden">
                     <div class="section-bar">
                         <span class="section-title">🚿 Shower & Hair Care</span>
-                        <div class="window-controls"><span>✕</span></div>
                     </div>
                     <div class="section-body" id="hair-shower-list"></div>
                 </div>
 
-                <!-- Custom Tasks Windows -->
                 <div class="y2k-section-window">
                     <div class="section-bar">
                         <span class="section-title">📌 Extra Tasks</span>
-                        <div class="window-controls"><span>✕</span></div>
                     </div>
                     <div class="section-body" id="custom-tasks-list"></div>
                 </div>
-
             </div>
 
-            <!-- Floating Action Button for Thumb Reach -->
             <button class="fab-btn" onclick="openAddTaskModal()">+</button>
         </section>
 
     </div>
 
-    <!-- Azkar Popup Modal Box -->
     <div id="azkar-modal" class="modal">
         <div class="modal-content">
             <div class="modal-popup-bar">
@@ -706,7 +578,6 @@
         </div>
     </div>
 
-    <!-- Add Custom Task Modal Box -->
     <div id="task-modal" class="modal">
         <div class="modal-content text-popup">
             <div class="modal-popup-bar">
@@ -714,7 +585,7 @@
                 <button class="close-modal" onclick="closeAddTaskModal()">✕</button>
             </div>
             <h3>Add a custom task for today:</h3>
-            <input type="text" id="new-task-input" placeholder="Type your task here..." autofocus>
+            <input type="text" id="new-task-input" placeholder="Type your task here...">
             <div class="modal-actions">
                 <button class="btn-save" onclick="saveCustomTask()">Add Task</button>
                 <button class="btn-cancel" onclick="closeAddTaskModal()">Cancel</button>
